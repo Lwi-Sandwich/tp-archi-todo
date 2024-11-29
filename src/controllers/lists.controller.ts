@@ -1,7 +1,6 @@
 import { List } from '../interfaces';
-import { FastifyRequest, FastifyReply, Params} from 'fastify';
+import { FastifyRequest, FastifyReply} from 'fastify';
 import { getNextId } from '../services';
-import { parse } from 'path';
 
 async function listLists(this: any, request: FastifyRequest, reply: FastifyReply) {
     const listIter = this.level.listdb.iterator();
