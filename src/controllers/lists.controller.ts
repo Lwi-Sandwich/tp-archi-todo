@@ -20,9 +20,7 @@ const addToLists = async function(this: any, request: FastifyRequest, reply: Fas
 
 const updateList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
     const id = parseInt(request.params.id);
-    console.log(request.params);
     const list: List = request.body as List;
-    console.log(list);
     if (list.id !== id) {
         reply.code(400);
         reply.send({ message: 'ID in body does not match ID in URL' });
@@ -35,12 +33,11 @@ const updateList = async function(this: any, request: FastifyRequest<{Params: {i
         return;
     }
     await this.level.listdb.put(id, JSON.stringify(list));
-    return Promise.resolve(list).then(list => reply.send(list));
+    Promise.resolve(list).then(list => reply.send(list));
 }
 
-const addItemToList = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
-    const { idAny }: any = request.params;
-    const id = parseInt(idAny);
+const addItemToList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
+    const id = parseInt(request.params.id);
     const item: Item = request.body as Item;
     item.id = await getNextId(this.level.itemdb);
     if (item.listId !== id) {
