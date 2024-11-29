@@ -25,6 +25,7 @@ const addToLists = async function (
 };
 
 const deleteFromLists = async function (
+  //TODO: Finish this
   this: any,
   request: FastifyRequest,
   reply: FastifyReply
