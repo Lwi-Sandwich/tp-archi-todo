@@ -5,7 +5,7 @@ import sublevel from "subleveldown"
 export default fp<FastifyLeveldbOptions>(async (fastify, opts) => {
     fastify.register(level,
         {
-            path:"./db",
+            path:"./listdb",
             name: "listdb"
         }
     );
