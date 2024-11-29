@@ -1,6 +1,7 @@
 import { List } from '../interfaces';
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply, Params} from 'fastify';
 import { getNextId } from '../services';
+import { parse } from 'path';
 
 async function listLists(this: any, request: FastifyRequest, reply: FastifyReply) {
     const listIter = this.level.listdb.iterator();
@@ -18,9 +19,9 @@ const addToLists = async function(this: any, request: FastifyRequest, reply: Fas
     Promise.resolve(list).then(list => reply.send(list));
 }
 
-const updateList = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
-    const { idAny }: any = request.params;
-    const id = parseInt(idAny);
+const updateList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
+    const id = parseInt(request.params.id);
+    console.log(request.params);
     const list: List = request.body as List;
     console.log(list);
     if (list.id !== id) {
@@ -35,6 +36,7 @@ const updateList = async function(this: any, request: FastifyRequest, reply: Fas
         return;
     }
     await this.level.listdb.put(id, JSON.stringify(list));
+    return Promise.resolve(list).then(list => reply.send(list));
 }
 
 export { listLists, addToLists, updateList };
