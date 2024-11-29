@@ -42,4 +42,28 @@ const deleteFromLists = async function (
   // await this.level.listdb.del(idItem);
 };
 
-export { listLists, addToLists, deleteFromLists };
+const updateList = async function (
+  this: any,
+  request: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) {
+  const id = parseInt(request.params.id);
+  console.log(request.params);
+  const list: List = request.body as List;
+  console.log(list);
+  if (list.id !== id) {
+    reply.code(400);
+    reply.send({ message: "ID in body does not match ID in URL" });
+    return;
+  }
+  const oldList = await this.level.listdb.get(id);
+  if (!oldList) {
+    reply.code(404);
+    reply.send({ message: "List not found" });
+    return;
+  }
+  await this.level.listdb.put(id, JSON.stringify(list));
+  return Promise.resolve(list).then((list) => reply.send(list));
+};
+
+export { listLists, addToLists, updateList, deleteFromLists };
