@@ -12,20 +12,22 @@ async function listLists(this: any, request: FastifyRequest, reply: FastifyReply
 }
 
 const addToLists = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
-    const list: List = request.body as List;
-    list.id = await getNextId(this.lists);
+    const body = request.body as Omit<List, 'id'>;
+    const list = {
+        id: await getNextId(this.lists),
+        ...body
+    };
     await this.lists.put(list.id, JSON.stringify(list));
     Promise.resolve(list).then(list => reply.send(list));
 }
 
-const updateList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
-    const id = parseInt(request.params.id);
-    const list: List = request.body as List;
-    if (list.id !== id) {
-        reply.code(400);
-        reply.send({ message: 'ID in body does not match ID in URL' });
-        return;
-    }
+const updateList = async function(this: any, request: FastifyRequest<{Params: {listId: string}}>, reply: FastifyReply) {
+    const id = parseInt(request.params.listId);
+    const body = request.body as Omit<List, 'id'>;
+    const list = {
+        id,
+        ...body
+    };
     const oldList = await this.lists.get(id);
     if (!oldList) {
         reply.code(404);
@@ -36,17 +38,40 @@ const updateList = async function(this: any, request: FastifyRequest<{Params: {i
     return Promise.resolve(list).then(list => reply.send(list));
 }
 
-const addItemToList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
-    const id = parseInt(request.params.id);
-    const item: Item = request.body as Item;
-    item.id = await getNextId(this.level.itemdb);
-    if (item.listId !== id) {
-        reply.code(400);
-        reply.send({ message: 'List ID in body does not match ID in URL' });
+const addItemToList = async function(this: any, request: FastifyRequest<{Params: {listId: string}}>, reply: FastifyReply) {
+    const listId = parseInt(request.params.listId);
+    const list = await this.lists.get(listId);
+    if (!list) {
+        reply.code(404);
+        reply.send({ message: 'List not found' });
         return;
     }
-    await this.level.itemdb.put(item.id, JSON.stringify(item));
+    const body = request.body as Omit<Item, 'id' | 'listId'>;
+    const item = {
+        id: await getNextId(this.items),
+        listId: listId,
+        ...body
+    };
+    await this.items.put(item.id, JSON.stringify(item));
     Promise.resolve(item).then(item => reply.send(item));
 }
 
-export { listLists, addToLists, updateList, addItemToList };
+const getItemsFromList = async function(this: any, request: FastifyRequest<{Params: {listId: string}}>, reply: FastifyReply) {
+    const listId = parseInt(request.params.listId);
+    const list = await this.lists.get(listId);
+    if (!list) {
+        reply.code(404);
+        reply.send({ message: 'List not found' });
+        return;
+    }
+    const itemsIter = this.items.iterator();
+    const result: Item[] = [];
+    for await (const [_, item] of itemsIter) {
+        if (JSON.parse(item.toString()).listId === listId){
+            result.push(JSON.parse(item.toString()));
+        }
+    }
+    reply.send(result);
+}
+
+export { listLists, addToLists, updateList, addItemToList, getItemsFromList };
