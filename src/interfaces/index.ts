@@ -3,4 +3,17 @@ interface List {
     name: string;
 }
 
-export type { List };
+enum TaskStatus {
+    Pending = 'PENDING',
+    InProgress = 'IN-PROGRESS',
+    Done = 'DONE'
+}
+
+interface Task {
+    id: number;
+    listId: number;
+    name: string;
+    status: TaskStatus;
+}
+
+export type { List, Task, TaskStatus };
