@@ -1,5 +1,5 @@
 import { Item, List } from '../interfaces';
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply} from 'fastify';
 import { getNextId } from '../services';
 
 async function listLists(this: any, request: FastifyRequest, reply: FastifyReply) {
@@ -18,9 +18,9 @@ const addToLists = async function(this: any, request: FastifyRequest, reply: Fas
     Promise.resolve(list).then(list => reply.send(list));
 }
 
-const updateList = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
-    const { idAny }: any = request.params;
-    const id = parseInt(idAny);
+const updateList = async function(this: any, request: FastifyRequest<{Params: {id: string}}>, reply: FastifyReply) {
+    const id = parseInt(request.params.id);
+    console.log(request.params);
     const list: List = request.body as List;
     console.log(list);
     if (list.id !== id) {
@@ -35,6 +35,7 @@ const updateList = async function(this: any, request: FastifyRequest, reply: Fas
         return;
     }
     await this.level.listdb.put(id, JSON.stringify(list));
+    return Promise.resolve(list).then(list => reply.send(list));
 }
 
 const addItemToList = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
