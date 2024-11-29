@@ -1,4 +1,4 @@
-import { List } from '../interfaces';
+import { Item, List } from '../interfaces';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { getNextId } from '../services';
 
@@ -37,4 +37,18 @@ const updateList = async function(this: any, request: FastifyRequest, reply: Fas
     await this.level.listdb.put(id, JSON.stringify(list));
 }
 
-export { listLists, addToLists, updateList };
+const addItemToList = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
+    const { idAny }: any = request.params;
+    const id = parseInt(idAny);
+    const item: Item = request.body as Item;
+    item.id = await getNextId(this.level.itemdb);
+    if (item.listId !== id) {
+        reply.code(400);
+        reply.send({ message: 'List ID in body does not match ID in URL' });
+        return;
+    }
+    await this.level.itemdb.put(item.id, JSON.stringify(item));
+    Promise.resolve(item).then(item => reply.send(item));
+}
+
+export { listLists, addToLists, updateList, addItemToList };

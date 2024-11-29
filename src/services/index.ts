@@ -4,6 +4,5 @@ export const getNextId = async function(db: any) {
     for await (const [key] of iterator) {
         lastKey = key;
     }
-    // lastKey is a buffer, so we need to convert it to a number
     return Number(lastKey.toString()) + 1;
 }
