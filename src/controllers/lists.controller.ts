@@ -1,4 +1,4 @@
-import { Item, List, validateCreateItemDTO } from '../interfaces';
+import { Item, List, validateCreateItemDTO, validateCreateListDTO } from '../interfaces';
 import { FastifyRequest, FastifyReply} from 'fastify';
 import { getNextId } from '../services';
 
@@ -12,7 +12,12 @@ async function listLists(this: any, request: FastifyRequest, reply: FastifyReply
 }
 
 const addToLists = async function(this: any, request: FastifyRequest, reply: FastifyReply) {
-    const body = request.body as Omit<List, 'id'>;
+    const body = request.body;
+    if (!validateCreateListDTO(body)){
+        reply.code(400);
+        reply.send({message: 'Invalid list body'});
+        return;
+    }
     const list = {
         id: await getNextId(this.lists),
         ...body
@@ -23,7 +28,12 @@ const addToLists = async function(this: any, request: FastifyRequest, reply: Fas
 
 const updateList = async function(this: any, request: FastifyRequest<{Params: {listId: string}}>, reply: FastifyReply) {
     const id = parseInt(request.params.listId);
-    const body = request.body as Omit<List, 'id'>;
+    const body = request.body;
+    if (!validateCreateListDTO(body)){
+        reply.code(400);
+        reply.send({message: 'Invalid list body'});
+        return;
+    }
     const list = {
         id,
         ...body

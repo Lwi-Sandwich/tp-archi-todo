@@ -32,5 +32,9 @@ function validateCreateItemDTO(body: any): body is CreateItemDTO {
     return true;
 }
 
+function validateCreateListDTO(body: any): body is CreateListDTO {
+    return typeof body.name === "string" && body.name.trim() !== '';
+}
+
 export type { List, Item, CreateItemDTO, CreateListDTO };
-export { ItemStatus, validateCreateItemDTO };
+export { ItemStatus, validateCreateItemDTO, validateCreateListDTO };
