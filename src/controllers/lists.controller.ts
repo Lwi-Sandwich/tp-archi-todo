@@ -74,4 +74,40 @@ const getItemsFromList = async function(this: any, request: FastifyRequest<{Para
     reply.send(result);
 }
 
-export { listLists, addToLists, updateList, addItemToList, getItemsFromList };
+const deleteItemFromList = async function(this: any, request: FastifyRequest<{Params: {listId: string, id: string}}>, reply: FastifyReply) {
+    const listId = parseInt(request.params.listId);
+    const id = parseInt(request.params.id);
+    const itemsIter = this.items.iterator();
+    for await (const [_, it] of itemsIter){
+        let item = JSON.parse(it.toString());
+        if (item.listId == listId && item.id == id) {
+            await this.items.del(id);
+            reply.send(item);
+            return;
+        }
+    }
+    reply.code(404);
+    reply.send({message: 'Item not found'});
+}
+
+const updateItem = async function(this: any, request: FastifyRequest<{Params: {listId: string, id: string}}>, reply: FastifyReply) {
+    const listId = parseInt(request.params.listId);
+    const id = parseInt(request.params.id);
+    const body = request.body as Omit<Item, 'listId' | 'id'>;
+    const newItem: Item = {
+        ...body,
+        id: id,
+        listId: listId
+    };
+    const oldItem = await this.items.get(id);
+    console.log(oldItem);
+    if (!oldItem){
+        reply.code(404);
+        reply.send({message: 'Item not found'});
+        return;
+    }
+    await this.items.put(id, JSON.stringify(newItem));
+    reply.send(newItem);
+}
+
+export { listLists, addToLists, updateList, addItemToList, getItemsFromList, deleteItemFromList, updateItem };
