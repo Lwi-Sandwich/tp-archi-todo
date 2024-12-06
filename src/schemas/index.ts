@@ -68,7 +68,7 @@ export const updateListSchema = {
 }
 
 export const deleteItemFromListSchema = {
-    tags: ['Lists'],
+    tags: ['Items'],
     summary: 'Delete an item from a list',
     response: {
         200: {
@@ -84,7 +84,7 @@ export const deleteItemFromListSchema = {
 }
 
 export const updateItemSchema = {
-    tags: ['Lists'],
+    tags: ['Items'],
     summary: 'Update an item',
     body: {
         $ref: 'CreateItemDTO'
