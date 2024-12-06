@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { addListSchema, listListsSchema } from "../../schemas"
+import { addListSchema, listListsSchema, updateListSchema } from "../../schemas"
 import {
 	listLists,
 	addToLists,
@@ -12,7 +12,7 @@ import {
 async function lists(fastify: FastifyInstance) {
 	fastify.get("/", {schema: listListsSchema}, listLists);
 	fastify.post("/", {schema: addListSchema}, addToLists);
-	fastify.put("/:listId", updateList);
+	fastify.put("/:listId", {schema: updateListSchema}, updateList);
 	fastify.post('/:listId/items', addItemToList);
 	fastify.get('/:listId/items', getItemsFromList);
 	fastify.delete('/:listId/items/:id', deleteItemFromList);
