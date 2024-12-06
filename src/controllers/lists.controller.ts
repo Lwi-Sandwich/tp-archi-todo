@@ -1,6 +1,6 @@
 import { Item, List, validateCreateItemDTO, validateCreateListDTO } from '../interfaces';
 import { FastifyRequest, FastifyReply} from 'fastify';
-import { getNextId } from '../services';
+import { getNextId } from '../utils';
 
 async function listLists(this: any, request: FastifyRequest, reply: FastifyReply) {
     const listIter = this.lists.iterator();
