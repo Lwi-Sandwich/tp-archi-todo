@@ -15,15 +15,23 @@ export default fp<FastifySwaggerOptions>(async (fastify) => {
     $id: 'CreateListDTO',
     ...JsonSchemas.definitions.CreateListDTO
   })
-    fastify.register(swagger, {
-        openapi: {
-            info: { title: 'Todo API', version: '1.0.0' },
-            servers: [
-              {
-                url: 'http://localhost:3000',
-                description: 'Development server'
-              }
-            ]
-        }
-    });
+  fastify.addSchema({
+    $id: 'CreateItemDTO',
+    ...JsonSchemas.definitions.CreateItemDTO
+  })
+  fastify.addSchema({
+    $id: 'ItemStatus',
+    ...JsonSchemas.definitions.ItemStatus
+  })
+  fastify.register(swagger, {
+      openapi: {
+          info: { title: 'Todo API', version: '1.0.0' },
+          servers: [
+            {
+              url: 'http://localhost:3000',
+              description: 'Development server'
+            }
+          ]
+      }
+  });
 });
