@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "List": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ItemStatus": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "IN-PROGRESS",
+        "DONE"
+      ]
+    },
+    "Item": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "listId": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "ItemStatus#"
+        }
+      },
+      "required": [
+        "id",
+        "listId",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "CreateItemDTO": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "ItemStatus#"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "CreateListDTO": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "validateCreateItemDTO": {
+      "$comment": "(body: any) => body is CreateItemDTO",
+      "type": "object",
+      "properties": {
+        "namedArgs": {
+          "type": "object",
+          "properties": {
+            "body": {}
+          },
+          "required": [
+            "body"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "validateCreateListDTO": {
+      "$comment": "(body: any) => body is CreateListDTO",
+      "type": "object",
+      "properties": {
+        "namedArgs": {
+          "type": "object",
+          "properties": {
+            "body": {}
+          },
+          "required": [
+            "body"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}
