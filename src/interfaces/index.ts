@@ -1,26 +1,26 @@
-interface List {
+export interface List {
     id: number;
     name: string;
 }
 
-enum ItemStatus {
+export enum ItemStatus {
     Pending = 'PENDING',
     InProgress = 'IN-PROGRESS',
     Done = 'DONE'
 }
 
-interface Item {
+export interface Item {
     id: number;
     listId: number;
     name: string;
     status: ItemStatus;
 }
 
-type CreateItemDTO = Omit<Item, 'id' | 'listId'>;
-type CreateListDTO = Omit<List, 'id'>;
+export type CreateItemDTO = Omit<Item, 'id' | 'listId'>;
+export type CreateListDTO = Omit<List, 'id'>;
 
 // Validation function
-function validateCreateItemDTO(body: any): body is CreateItemDTO {
+export function validateCreateItemDTO(body: any): body is CreateItemDTO {
     // Check if 'name' is a non-empty string
     if (typeof body.name !== 'string' || body.name.trim() === '') {
         return false;
@@ -32,9 +32,6 @@ function validateCreateItemDTO(body: any): body is CreateItemDTO {
     return true;
 }
 
-function validateCreateListDTO(body: any): body is CreateListDTO {
+export function validateCreateListDTO(body: any): body is CreateListDTO {
     return typeof body.name === "string" && body.name.trim() !== '';
 }
-
-export type { List, Item, CreateItemDTO, CreateListDTO };
-export { ItemStatus, validateCreateItemDTO, validateCreateListDTO };
