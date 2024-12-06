@@ -65,4 +65,44 @@ export const updateListSchema = {
             $ref: 'ErrorMessage'
         }
     }
-};
+}
+
+export const deleteItemFromListSchema = {
+    tags: ['Lists'],
+    summary: 'Delete an item from a list',
+    response: {
+        200: {
+            description: 'Deleted successfully',
+            $ref: 'Item'
+        },
+        404: {
+            description: 'Item not found',
+            type: 'object',
+            $ref: 'ErrorMessage'
+        }
+    }
+}
+
+export const updateItemSchema = {
+    tags: ['Lists'],
+    summary: 'Update an item',
+    body: {
+        $ref: 'CreateItemDTO'
+    },
+    response: {
+        200: {
+            description: 'Updated successfully',
+            $ref: 'Item'
+        },
+        400: {
+            description: 'Invalid body',
+            type: 'object',
+            $ref: 'ErrorMessage'
+        },
+        404: {
+            description: 'Item not found',
+            type: 'object',
+            $ref: 'ErrorMessage'
+        }
+    }
+}
