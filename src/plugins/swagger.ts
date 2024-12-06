@@ -16,7 +16,7 @@ export default fp<FastifySwaggerOptions>(async (fastify) => {
 		...JsonSchemas.definitions.CreateListDTO
 	});
 	fastify.addSchema({
-		id: 'CreateItemDTO',
+		$id: 'CreateItemDTO',
 		...JsonSchemas.definitions.CreateItemDTO
 	});
 	fastify.addSchema({
