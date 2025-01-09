@@ -2,6 +2,7 @@ import { join } from "path";
 import AutoLoad, { AutoloadPluginOptions } from "@fastify/autoload";
 import { FastifyPluginAsync, FastifyServerOptions } from "fastify";
 import SwaggerUI from "@fastify/swagger-ui";
+import cors from '@fastify/cors';
 
 export interface AppOptions
   extends FastifyServerOptions,
@@ -34,6 +35,9 @@ const app: FastifyPluginAsync<AppOptions> = async (
 
   void fastify.register(SwaggerUI, {
     routePrefix: "/api-docs",
+  });
+
+  void fastify.register(cors, {
   });
 };
 
